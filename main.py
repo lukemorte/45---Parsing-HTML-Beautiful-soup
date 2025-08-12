@@ -1,13 +1,10 @@
 # 45 Parsing HTML
 
 from bs4 import BeautifulSoup
+import requests
+import pprint
 
-with open("website.html") as file:
-    contents = file.read()
+response = requests.get("https://news.ycombinator.com/")
 
-soup = BeautifulSoup(contents, features="html.parser")
-
-test = soup.find_all("a")
-for item in test:
-    print(item.attrs["href"])
-    
+soup = BeautifulSoup(response.text, features="html.parser")
+print(soup.prettify())
