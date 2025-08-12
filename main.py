@@ -1,10 +1,30 @@
-# 45 Parsing HTML
+# 100 best movies scrapper
 
-from bs4 import BeautifulSoup
 import requests
-import pprint
+from bs4 import BeautifulSoup
 
-response = requests.get("https://news.ycombinator.com/")
+URL = "https://web.archive.org/web/20200518073855/https://www.empireonline.com/movies/features/best-movies-2/"
 
-soup = BeautifulSoup(response.text, features="html.parser")
-print(soup.prettify())
+response = requests.get(url=URL)
+html_data = response.text
+soup = BeautifulSoup(html_data, features="html.parser")
+
+sections = soup.find_all(name="section", class_="gallery__content-item")
+
+movies = []
+images = []
+
+for section in sections:
+    title = section.find(name="h3").getText()
+    movies.append(title)
+
+    image = section.find(name="img", class_="landscape").get("src")
+    images.append(image)
+
+
+movies = movies[::-1]
+movies_txt = "\n".join(movies)
+
+with open("movies.txt", "w", encoding="utf-8") as file:
+    file.write(movies_txt)
+
